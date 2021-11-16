@@ -1,0 +1,152 @@
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  creationTimestamp: '2021-11-08T10:32:32Z'
+  finalizers:
+    - ingresscontroller.operator.openshift.io/finalizer-ingresscontroller
+  generation: 7
+  managedFields:
+    - apiVersion: operator.openshift.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:finalizers':
+            .: {}
+            'v:"ingresscontroller.operator.openshift.io/finalizer-ingresscontroller"': {}
+        'f:spec':
+          .: {}
+          'f:httpErrorCodePages':
+            .: {}
+            'f:name': {}
+          'f:tuningOptions': {}
+          'f:unsupportedConfigOverrides': {}
+        'f:status':
+          .: {}
+          'f:availableReplicas': {}
+          'f:conditions': {}
+          'f:domain': {}
+          'f:endpointPublishingStrategy':
+            .: {}
+            'f:hostNetwork':
+              .: {}
+              'f:protocol': {}
+            'f:type': {}
+          'f:observedGeneration': {}
+          'f:selector': {}
+          'f:tlsProfile':
+            .: {}
+            'f:ciphers': {}
+            'f:minTLSVersion': {}
+      manager: ingress-operator
+      operation: Update
+      time: '2021-11-08T10:33:15Z'
+    - apiVersion: operator.openshift.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:replicas': {}
+      manager: kubectl-edit
+      operation: Update
+      time: '2021-11-08T10:54:27Z'
+    - apiVersion: operator.openshift.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:nodePlacement':
+            .: {}
+            'f:nodeSelector':
+              .: {}
+              'f:matchLabels':
+                .: {}
+                'f:node-role.kubernetes.io/router': {}
+            'f:tolerations': {}
+      manager: Mozilla
+      operation: Update
+      time: '2021-11-08T15:11:16Z'
+  name: default
+  namespace: openshift-ingress-operator
+  resourceVersion: '132003'
+  uid: 86674e80-0e83-4429-bed1-c3a9441c02c9
+spec:
+  httpErrorCodePages:
+    name: ''
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/router: ''
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/router
+        operator: Exists
+  replicas: 3
+  tuningOptions: {}
+  unsupportedConfigOverrides: null
+status:
+  availableReplicas: 3
+  conditions:
+    - lastTransitionTime: '2021-11-08T10:33:14Z'
+      reason: Valid
+      status: 'True'
+      type: Admitted
+    - lastTransitionTime: '2021-11-08T15:16:43Z'
+      status: 'True'
+      type: PodsScheduled
+    - lastTransitionTime: '2021-11-08T10:58:00Z'
+      message: The deployment has Available status condition set to True
+      reason: DeploymentAvailable
+      status: 'True'
+      type: DeploymentAvailable
+    - lastTransitionTime: '2021-11-08T10:58:00Z'
+      message: Minimum replicas requirement is met
+      reason: DeploymentMinimumReplicasMet
+      status: 'True'
+      type: DeploymentReplicasMinAvailable
+    - lastTransitionTime: '2021-11-08T15:17:13Z'
+      message: All replicas are available
+      reason: DeploymentReplicasAvailable
+      status: 'True'
+      type: DeploymentReplicasAllAvailable
+    - lastTransitionTime: '2021-11-08T10:33:15Z'
+      message: >-
+        The configured endpoint publishing strategy does not include a managed
+        load balancer
+      reason: EndpointPublishingStrategyExcludesManagedLoadBalancer
+      status: 'False'
+      type: LoadBalancerManaged
+    - lastTransitionTime: '2021-11-08T10:33:15Z'
+      message: No DNS zones are defined in the cluster dns config.
+      reason: NoDNSZones
+      status: 'False'
+      type: DNSManaged
+    - lastTransitionTime: '2021-11-08T10:58:00Z'
+      status: 'True'
+      type: Available
+    - lastTransitionTime: '2021-11-08T13:51:13Z'
+      status: 'False'
+      type: Degraded
+    - lastTransitionTime: '2021-11-08T13:51:13Z'
+      message: Canary route checks for the default ingress controller are successful
+      reason: CanaryChecksSucceeding
+      status: 'True'
+      type: CanaryChecksSucceeding
+  domain: apps.proddc.customs.go.id
+  endpointPublishingStrategy:
+    hostNetwork:
+      protocol: TCP
+    type: HostNetwork
+  observedGeneration: 7
+  selector: ingresscontroller.operator.openshift.io/deployment-ingresscontroller=default
+  tlsProfile:
+    ciphers:
+      - TLS_AES_128_GCM_SHA256
+      - TLS_AES_256_GCM_SHA384
+      - TLS_CHACHA20_POLY1305_SHA256
+      - ECDHE-ECDSA-AES128-GCM-SHA256
+      - ECDHE-RSA-AES128-GCM-SHA256
+      - ECDHE-ECDSA-AES256-GCM-SHA384
+      - ECDHE-RSA-AES256-GCM-SHA384
+      - ECDHE-ECDSA-CHACHA20-POLY1305
+      - ECDHE-RSA-CHACHA20-POLY1305
+      - DHE-RSA-AES128-GCM-SHA256
+      - DHE-RSA-AES256-GCM-SHA384
+    minTLSVersion: VersionTLS12
