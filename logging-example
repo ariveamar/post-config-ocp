@@ -1,0 +1,216 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogging
+metadata:
+  creationTimestamp: '2021-11-08T16:32:02Z'
+  generation: 2
+  managedFields:
+    - apiVersion: logging.openshift.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:collection':
+            .: {}
+            'f:logs':
+              .: {}
+              'f:fluentd': {}
+              'f:type': {}
+          'f:logStore':
+            .: {}
+            'f:elasticsearch':
+              .: {}
+              'f:nodeCount': {}
+              'f:nodeSelector':
+                .: {}
+                'f:node-role.kubernetes.io/infra': {}
+              'f:redundancyPolicy': {}
+              'f:storage':
+                .: {}
+                'f:size': {}
+                'f:storageClassName': {}
+              'f:tolerations': {}
+            'f:retentionPolicy':
+              .: {}
+              'f:application':
+                .: {}
+                'f:maxAge': {}
+              'f:infra':
+                .: {}
+                'f:maxAge': {}
+            'f:type': {}
+          'f:managementState': {}
+          'f:visualization':
+            .: {}
+            'f:kibana':
+              .: {}
+              'f:nodeSelector':
+                .: {}
+                'f:node-role.kubernetes.io/infra': {}
+              'f:replicas': {}
+              'f:tolerations': {}
+            'f:type': {}
+      manager: Mozilla
+      operation: Update
+      time: '2021-11-08T16:32:02Z'
+    - apiVersion: logging.openshift.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          .: {}
+          'f:clusterConditions': {}
+          'f:collection':
+            .: {}
+            'f:logs':
+              .: {}
+              'f:fluentdStatus':
+                .: {}
+                'f:daemonSet': {}
+                'f:nodes':
+                  .: {}
+                  'f:fluentd-26w2b': {}
+                  'f:fluentd-8298p': {}
+                  'f:fluentd-dlv9c': {}
+                  'f:fluentd-fg7d5': {}
+                  'f:fluentd-fgb8d': {}
+                  'f:fluentd-s4hvj': {}
+                  'f:fluentd-sx9sh': {}
+                'f:pods':
+                  .: {}
+                  'f:failed': {}
+                  'f:notReady': {}
+                  'f:ready': {}
+          'f:curation': {}
+          'f:logStore':
+            .: {}
+            'f:elasticsearchStatus': {}
+          'f:visualization':
+            .: {}
+            'f:kibanaStatus': {}
+      manager: cluster-logging-operator
+      operation: Update
+      time: '2021-11-16T20:18:21Z'
+  name: instance
+  namespace: openshift-logging
+  resourceVersion: '6382028'
+  uid: 35efec5e-2796-4f01-b7cc-f6e58ce40a95
+spec:
+  collection:
+    logs:
+      fluentd: {}
+      type: fluentd
+  logStore:
+    elasticsearch:
+      nodeCount: 3
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      redundancyPolicy: SingleRedundancy
+      storage:
+        size: 500Gi
+        storageClassName: infra-sc
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    retentionPolicy:
+      application:
+        maxAge: 7d
+      infra:
+        maxAge: 3d
+    type: elasticsearch
+  managementState: Managed
+  visualization:
+    kibana:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      replicas: 1
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    type: kibana
+status:
+  clusterConditions:
+    - lastTransitionTime: '2021-11-08T16:32:01Z'
+      status: 'False'
+      type: CollectorDeadEnd
+    - lastTransitionTime: '2021-11-08T16:32:01Z'
+      message: curator is deprecated in favor of defining retention policy
+      reason: ResourceDeprecated
+      status: 'True'
+      type: CuratorRemoved
+  collection:
+    logs:
+      fluentdStatus:
+        daemonSet: fluentd
+        nodes:
+          fluentd-26w2b: master1.proddc.customs.go.id
+          fluentd-8298p: worker1.proddc.customs.go.id
+          fluentd-dlv9c: master0.proddc.customs.go.id
+          fluentd-fg7d5: worker0.proddc.customs.go.id
+          fluentd-fgb8d: worker3.proddc.customs.go.id
+          fluentd-s4hvj: worker2.proddc.customs.go.id
+          fluentd-sx9sh: master2.proddc.customs.go.id
+        pods:
+          failed: []
+          notReady: []
+          ready:
+            - fluentd-26w2b
+            - fluentd-8298p
+            - fluentd-dlv9c
+            - fluentd-fg7d5
+            - fluentd-fgb8d
+            - fluentd-s4hvj
+            - fluentd-sx9sh
+  curation: {}
+  logStore:
+    elasticsearchStatus:
+      - cluster:
+          numDataNodes: 3
+          initializingShards: 0
+          numNodes: 3
+          activePrimaryShards: 198
+          status: green
+          pendingTasks: 0
+          relocatingShards: 0
+          activeShards: 396
+          unassignedShards: 0
+        clusterName: elasticsearch
+        nodeConditions:
+          elasticsearch-cdm-efrundxn-1: []
+          elasticsearch-cdm-efrundxn-2: []
+          elasticsearch-cdm-efrundxn-3: []
+        nodeCount: 3
+        pods:
+          client:
+            failed: []
+            notReady: []
+            ready:
+              - elasticsearch-cdm-efrundxn-1-55d89c589c-l2bfr
+              - elasticsearch-cdm-efrundxn-2-f759b4554-7l225
+              - elasticsearch-cdm-efrundxn-3-6849654f95-wc274
+          data:
+            failed: []
+            notReady: []
+            ready:
+              - elasticsearch-cdm-efrundxn-1-55d89c589c-l2bfr
+              - elasticsearch-cdm-efrundxn-2-f759b4554-7l225
+              - elasticsearch-cdm-efrundxn-3-6849654f95-wc274
+          master:
+            failed: []
+            notReady: []
+            ready:
+              - elasticsearch-cdm-efrundxn-1-55d89c589c-l2bfr
+              - elasticsearch-cdm-efrundxn-2-f759b4554-7l225
+              - elasticsearch-cdm-efrundxn-3-6849654f95-wc274
+        shardAllocationEnabled: all
+  visualization:
+    kibanaStatus:
+      - deployment: kibana
+        pods:
+          failed: []
+          notReady: []
+          ready:
+            - kibana-6957b8d469-rbctf
+        replicaSets:
+          - kibana-6957b8d469
+        replicas: 1
