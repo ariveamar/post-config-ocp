@@ -50,4 +50,11 @@ spec:
   collection:
     logs:
       type: "fluentd"  
-      fluentd: {}
+      fluentd:
+      tolerations: 
+      - key: "node-role.kubernetes.io/infra"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "node-role.kubernetes.io/router"
+        operator: "Exists"
+        effect: "NoSchedule"
