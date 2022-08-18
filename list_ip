@@ -1,0 +1,16 @@
+bootstrap.ocp-prod.pusiknas.polri.go.id	10.101.100.122
+bastion.pusiknas.polri.go.id	10.101.100.129
+helper.pusiknas.polri.go.id	10.101.100.130
+master-01.ocp-prod.pusiknas.polri.go.id	10.101.100.131
+master-02.ocp-prod.pusiknas.polri.go.id	10.101.100.132
+master-03.ocp-prod.pusiknas.polri.go.id	10.101.100.133
+infra-01.ocp-prod.pusiknas.polri.go.id	10.101.100.136
+infra-02.ocp-prod.pusiknas.polri.go.id	10.101.100.137
+infra-03.ocp-prod.pusiknas.polri.go.id	10.101.100.147
+router-01.ocp-prod.pusiknas.polri.go.id	10.101.100.148
+router-02.ocp-prod.pusiknas.polri.go.id	10.101.100.149
+router-03.ocp-prod.pusiknas.polri.go.id	10.101.100.150
+worker-01.ocp-prod.pusiknas.polri.go.id	10.101.100.152
+worker-02.ocp-prod.pusiknas.polri.go.id	10.101.100.153
+worker-03.ocp-prod.pusiknas.polri.go.id	10.101.100.155
+worker-04.ocp-prod.pusiknas.polri.go.id	10.101.100.156
