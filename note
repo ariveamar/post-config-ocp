@@ -1,0 +1,342 @@
+Installasi OCP 4.4. UPI Baremetal
+1.Persiapan DNS,LB,DHCP,PXE,NFS
+A.Install Paket & Download Config From Git yang di butuhkan
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
+yum -y install git bind bind-utils open-vm-tools chrony haproxy httpd nfs-utils \
+net-tools unzip tftp-server syslinux-tftpboot tree python36 jq oniguruma wget
+git clone https://github.com/ariveamar/ocp4_files.git
+
+B.Disable Firewalld dan Selinux
+systemctl disable firewalld --now
+sed -i ' s/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+reboot
+
+C.Setup DNS Server
+cd /root/okd4_files/
+[root@ocp4-services okd4_files]# cp named.conf /etc/named.conf
+[root@ocp4-services okd4_files]# cp named.conf.local /etc/named/
+[root@ocp4-services okd4_files]# mkdir /etc/named/zones
+[root@ocp4-services okd4_files]# cp db* /etc/named/zones
+vi /etc/named.conf
+--------------------------------------------------
+listen-on port 53 { 127.0.0.1; 10.101.100.130; };
+allow-query     { any; };
+-------------------------------------------------
+vi /etc/named/named.conf.local
+---------------------------------------------
+zone "pusiknas.polri.go.id"
+zone "100.101.10.in-addr.arpa"
+--------------------------------------------
+
+vi /etc/named/zones/db.ptr
+------------------------------------------------------------------------------
+
+replace example.com pusiknas.polri.go.id
+
+ubah ip sesuai dengan mappingan ip nya
+
+----------------------------------------------------------------------------------
+
+nano /etc/named/zones/db.ptr
+----------------------------------------------------------------------------------
+
+replace example.com pusiknas.polri.go.id
+
+ubah ip sesuai dengan mappingan ip nya
+
+
+
+----------------------------------------------------------------------------------
+
+systemctl enable named --now
+
+
+
+
+D.Setup HA Proxy
+cd /root/okd4_files/
+cp haproxy.cfg /etc/haproxy/haproxy.cfg
+----------------------------------------------------------------------------------
+
+ubah ip sesuai dengan mappingan ip nya
+
+
+----------------------------------------------------------------------------------
+
+systemctl enable haproxy --now
+
+E.Setup NTP Server
+cd /root/okd4_files/
+cp chrony.conf /etc/chrony.conf
+--------------------------------
+allow 10.8.230.0/24
+--------------------------------
+systemctl enable chronyd --now
+
+
+F.Setup NFS Server
+cd /root/okd4_files/
+mkdir -p /storage/registry /storage/elastic1 /storage/elastic2 /storage/elastic3
+cp export /etc/exports
+systemctl enable nfs-server --now
+
+
+
+
+H.Setup DHCP and PXE Server
+cd /root/okd4_files/
+cp httpd.conf /etc/httpd/conf/httpd.conf
+systemctl enable httpd --now
+mkdir -pv /var/lib/tftpboot/pxelinux.cfg/
+vi /var/lib/tftpboot/pxelinux.cfg/default
+-----------------------------------------------------------------
+###########################################################
+# Reference: /var/lib/tftpboot/pxelinux.cfg/default
+###########################################################
+UI vesamenu.c32
+#DEFAULT menu.c32
+DEFAULT LOCAL
+PROMPT 0
+TIMEOUT 200
+ONTIMEOUT LOCAL
+
+#MENU BACKGROUND rhcos/ocp4.png
+MENU TITLE PXE BOOT MENU
+
+LABEL WORKER-BIOS
+  MENU LABEL ^1 WORKER (BIOS)
+  KERNEL rhcos/rhcos-kernel
+  APPEND rd.neednet=1 initrd=rhcos/rhcos-initramfs.img console=tty0 coreos.inst=yes coreos.inst.install_dev=sda coreos.inst.ignition_url=http://10.8.230.109:8080/worker.ign coreos.live.rootfs_url=http://10.8.230.109:8080/metal/rhcos-live-rootfs.x86_64.img ip=dhcp
+
+LABEL MASTER-BIOS
+  MENU LABEL ^2 MASTER (BIOS)
+  KERNEL rhcos/rhcos-kernel
+  APPEND rd.neednet=1 initrd=rhcos/rhcos-initramfs.img console=tty0 coreos.inst=yes coreos.inst.install_dev=sda coreos.inst.ignition_url=http://10.8.230.109:8080/master.ign coreos.live.rootfs_url=http://10.8.230.109:8080/metal/rhcos-live-rootfs.x86_64.img ip=dhcp
+  
+LABEL BOOTSTRAP-BIOS
+  MENU LABEL ^3 BOOTSTRAP (BIOS)
+  KERNEL rhcos/rhcos-kernel
+  APPEND rd.neednet=1 initrd=rhcos/rhcos-initramfs.img console=tty0 coreos.inst=yes coreos.inst.install_dev=sda coreos.inst.ignition_url=http://10.8.230.109:8080/bootstrap.ign coreos.live.rootfs_url=http://10.8.230.109:8080/metal/rhcos-live-rootfs.x86_64.img ip=dhcp
+
+LABEL LOCAL
+  MENU LABEL ^4 BOOT FROM LOCAL DISK
+  MENU DEFAULT
+  LOCALBOOT 0
+
+###########################################################
+# SECTION FOR ADVANCED TROUBLESHOOTING
+# man dracut.cmdline for options
+###########################################################
+LABEL RECOVERY1
+  MENU LABEL ^8 Recovery (initqueue)
+  KERNEL rhcos/rhcos-kernel
+  APPEND rd.break=initqueue  rd.neednet=1 initrd=rhcos/rhcos-initramfs.img console=tty0 ip=eno1:dhcp
+
+# NOTES: Using rd.break=initqueue
+# Identify disk: lsblk
+# Mount root partition: mkdir /mnt ; mount /dev/sda2 /mnt ; cd /mnt
+
+LABEL RECOVERY2
+  MENU LABEL ^9 Recovery (pre-mount)
+  KERNEL rhcos/rhcos-kernel
+  APPEND rd.break=pre-mount  rd.neednet=1 initrd=rhcos/rhcos-initramfs.img console=tty0 ip=eno1:dhcp
+
+# NOTES: Using rd.break=pre-mount
+# cat /proc/cmdline
+###########################################################
+# END OF FILE
+###########################################################
+
+-----------------------------------------------------------------
+mkdir -p /var/lib/tftpboot/rhcos/
+mkdir /var/www/html/metal
+
+cp rhcos-4.4.17-x86_64-installer-initramfs.x86_64.img /var/lib/tftpboot/rhcos/rhcos-initramfs.img
+cp rhcos-4.4.17-x86_64-installer-kernel-x86_64 /var/lib/tftpboot/rhcos/rhcos-kernel
+cp rhcos-4.4.17-x86_64-metal.x86_64.raw.gz /var/www/html/metal/rhcos-metal.x86_64.raw.gz
+chmod 755 -R /var/www/html/metal
+ 
+ 
+
+cp dnsmasq-pxe.conf /etc/dnsmasq.d/dnsmasq-pxe.conf
+vi /etc/dnsmasq.d/dnsmasq-pxe.conf
+---------------------------------------------------------------------------------------
+### dnsmasq configurations
+# disable DNS /etc/dnsmasq.conf set port=0
+#
+interface=ens192
+
+
+
+#### DHCP (dnsmasq --help dhcp)
+dhcp-range=ens192,172.23.5.111,172.23.5.116,24h
+dhcp-option=option:netmask,255.255.255.224
+dhcp-option=option:router,172.23.5.126
+dhcp-option=option:dns-server,172.23.5.104
+dhcp-option=option:ntp-server,172.23.5.104
+
+# Bootstrap
+dhcp-host=00:50:56:82:a8:8b,172.23.5.111
+
+# master-0, master-1, master-2
+dhcp-host=00:50:56:82:90:E1,172.23.5.112
+dhcp-host=00:50:56:82:FF:70,172.23.5.113
+dhcp-host=00:50:56:82:82:89,172.23.5.114
+
+# worker-0, worker-1, worker-2
+dhcp-host=00:50:56:82:CA:53,172.23.5.115
+dhcp-host=00:50:56:82:95:CD,172.23.5.116
+#### PXE
+enable-tftp
+tftp-root=/var/lib/tftpboot,ens192
+dhcp-boot=pxelinux.0
+
+#
+# END OF FILE
+#
+---------------------------------------------------------------------------------------
+systemctl enable dnsmasq --now; systemctl enable tftp --now
+
+I.Download Openshift Client and Setup Ignition File
+cd /root/okd4_files
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.19/openshift-client-linux.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.19/openshift-install-linux.tar.gz
+tar xvf openshift-install-linux.tar.gz
+tar xvf openshift-client-linux.tar.gz
+mv oc kubectl openshift-install /usr/local/bin/
+
+
+ssh-keygen -t rsa -b 4096 -N '' -f  ~/.ssh/id_rsa
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa-s w- 
+
+mkdir /install-ocp
+cd /install-ocp
+vi install-config.yaml
+--------------------------------------------------------------------------------------------------------
+apiVersion: v1
+baseDomain: vtidemo.com
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+metadata:
+  name: lab
+networking:
+  clusterNetwork:
+  - cidr: 10.254.0.0/16
+    hostPrefix: 24
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.16.0.0/22
+platform:
+  none: {}
+fips: false
+pullSecret: ''
+sshKey: ''
+--------------------------------------------------------------------------------------------------------
+openshift-install create manifests --dir=/install-ocp
+vi manifests/cluster-scheduler-02-config.yml
+----------------------------------------------------------------
+mastersSchedulable: false
+----------------------------------------------------------------
+openshift-install create ignition-configs --dir=/install-ocp
+cp bootstrap.ign master.ign worker.ign /var/www/html/; chmod 755 /var/www/html/*.ign
+
+2.Deploy Openshift
+A. Waiting Bootstrap Complete
+openshift-install --dir=/new-ocp47 wait-for bootstrap-complete --log-level=debug
+B.Approve CSR Worker Node
+export KUBECONFIG=auth/kubeconfig
+oc get nodes
+oc get csr
+oc get csr -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | xargs oc adm certificate approve
+
+3.Post Deployment ( Setting Persistent Storage untuk Image Registry Internal Openshift)
+cd /root/okd4_files
+vi registry_pv.yaml
+oc create -f registry_pv.yaml
+oc edit configs.imageregistry.operator.openshift.io
+-------------------------------------------------------
+managementStage: Managed
+storage:
+  pvc:
+    claim:
+-------------------------------------------------------
+
+
+4.Setup Cluster Logging
+
+--- 
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogging
+metadata: 
+  name: instance
+  namespace: openshift-logging
+spec: 
+  collection: 
+    logs: 
+      fluentd: 
+        resources: 
+          limits: 
+            cpu: 250m
+            memory: 1Gi
+          requests: 
+            cpu: 250m
+            memory: 1Gi
+      type: fluentd
+  curation: 
+    curator: 
+      schedule: "30 3 * * *"
+    type: curator
+  logStore: 
+    elasticsearch: 
+      nodeCount: 3
+      redundancyPolicy: SingleRedundancy
+      storage: 
+        size: 100G
+        storageClassName: nfs-log
+    type: elasticsearch
+  managementState: Managed
+  visualization: 
+    kibana: 
+      replicas: 1
+      requests: 
+        cpu: 500m
+        memory: 1Gi
+        proxy: ~
+      resources: 
+        limits: 
+          memory: 100Mi
+        requests: 
+          cpu: 100m
+          memory: 100Mi
+    type: kibana
+5.Setup Authentication 
+htpasswd -c -B -b users.htpasswd admin-virtus admin
+oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd -n openshift-config
+
+vi secure-cr.yaml
+------------------------------------------------------------------------------
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+spec:
+  identityProviders:
+  - name: my_htpasswd_provider
+    mappingMethod: claim
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpass-secret
+
+-------------------------------------------------------------------------------
+oc apply -f secure-cr.yaml
+
+
+oc adm policy add-cluster-role-to-user cluster-admin admin-virtus
