@@ -1,0 +1,19 @@
+  nodeSelector:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+              - infra-1.exmple.com
+              - infra-2.example.com
+              - infra-3.example.com
+  storageClassDevices:
+    - devicePaths:
+        - /dev/sdb
+      fsType: xfs
+      storageClassName: sc-monitoring
+      volumeMode: Filesystem
+  tolerations:
+    - effect: NoSchedule
+      key: infra-mon
+      operator: Exists
