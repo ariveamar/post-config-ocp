@@ -1,0 +1,32 @@
+htpasswd -B -b users.htpasswd	hari-mulia-admin	Pusiknashari-mulia-admin
+htpasswd -B -b users.htpasswd	hari-mulia-dev	Pusiknashari-mulia-dev
+htpasswd -B -b users.htpasswd	siti-baenur-admin	Pusiknassiti-baenur-admin
+htpasswd -B -b users.htpasswd	siti-baenur-dev	Pusiknassiti-baenur-dev
+htpasswd -B -b users.htpasswd	ilham-aidilah-admin	Pusiknasilham-aidilah-admin
+htpasswd -B -b users.htpasswd	ilham-aidilah-dev	Pusiknasilham-aidilah-dev
+htpasswd -B -b users.htpasswd	dinurivan-admin	Pusiknasdinurivan-admin
+htpasswd -B -b users.htpasswd	dinurivan-dev	Pusiknasdinurivan-dev
+htpasswd -B -b users.htpasswd	wihelman-admin	Pusiknaswihelman-admin
+htpasswd -B -b users.htpasswd	wihelman-dev	Pusiknaswihelman-dev
+htpasswd -B -b users.htpasswd	kurniawan-admin	Pusiknaskurniawan-admin
+htpasswd -B -b users.htpasswd	kurniawan-dev	Pusiknaskurniawan-dev
+htpasswd -B -b users.htpasswd	ananda-admin	Pusiknasananda-admin
+htpasswd -B -b users.htpasswd	ananda-dev	Pusiknasananda-dev
+htpasswd -B -b users.htpasswd	rafly-admin	Pusiknasrafly-admin
+htpasswd -B -b users.htpasswd	rafly-dev	Pusiknasrafly-dev
+htpasswd -B -b users.htpasswd	wawan-admin	Pusiknaswawan-admin
+htpasswd -B -b users.htpasswd	wawan-dev	Pusiknaswawan-dev
+htpasswd -B -b users.htpasswd	julius-admin	Pusiknasjulius-admin
+htpasswd -B -b users.htpasswd	julius-dev	Pusiknasjulius-dev
+		
+		
+oc adm policy add-cluster-role-to-user cluster-admin	hari-mulia-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	siti-baenur-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	ilham-aidilah-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	dinurivan-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	wihelman-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	kurniawan-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	ananda-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	rafly-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	wawan-admin	
+oc adm policy add-cluster-role-to-user cluster-admin	julius-admin	
