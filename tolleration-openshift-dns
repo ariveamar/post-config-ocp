@@ -1,0 +1,10 @@
+$ oc edit dns.operator/default
+
+apiVersion: operator.openshift.io/v1
+kind: DNS
+metadata:
+  name: default
+spec:
+  nodePlacement:
+    tolerations:
+    - operator: Exists
