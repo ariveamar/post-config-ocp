@@ -17,3 +17,16 @@
     - effect: NoSchedule
       key: infra-mon
       operator: Exists
+  storageClassDevices:
+    - devicePaths:
+        - /dev/sdb
+        - /dev/sdc
+        - /dev/sdd
+      storageClassName: sc-odf
+      volumeMode: Block
+  tolerations:
+    - effect: NoSchedule
+      key: node.ocs.openshift.io/storage
+      operator: Equal
+      tolerationSeconds: 3600
+      value: 'true'
