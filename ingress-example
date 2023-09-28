@@ -1,3 +1,4 @@
+oc edit deployment/router-default -n openshift-ingress
 apiVersion: operator.openshift.io/v1
 kind: IngressController
 metadata:
