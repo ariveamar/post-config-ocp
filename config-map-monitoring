@@ -3,19 +3,6 @@ apiVersion: v1
 metadata:
   name: cluster-monitoring-config
   namespace: openshift-monitoring
-  uid: 0f168ffc-8594-47ef-986c-aa03341b337c
-  resourceVersion: '164143'
-  creationTimestamp: '2021-11-08T15:17:35Z'
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: v1
-      time: '2021-11-08T15:17:35Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:data':
-          .: {}
-          'f:config.yaml': {}
 data:
   config.yaml: |
     alertmanagerMain:
