@@ -14,10 +14,10 @@ data:
         operator: Exists
       volumeClaimTemplate:
         spec:
-          storageClassName: infra-sc
+          storageClassName: sc-alertmanager
           resources:
             requests:
-              storage: 10Gi
+              storage: 20Gi
     prometheusK8s:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
@@ -27,11 +27,11 @@ data:
         operator: Exists
       volumeClaimTemplate:
         spec:
-          storageClassName: infra-sc
+          storageClassName: sc-monitoring
           resources:
             requests:
-              storage: 100Gi
-      retention: 3d
+              storage: 512Gi
+      retention: 7d
     prometheusOperator:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
