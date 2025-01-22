@@ -1,0 +1,14 @@
+oc label machineconfigpool worker custom-kubelet=system-reserved-global
+
+
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: system-reserve-global
+spec:
+  autoSizingReserved: true
+  machineConfigPoolSelector:
+    matchLabels:
+      custom-kubelet: system-reserved-global
+
+  
