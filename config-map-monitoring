@@ -14,7 +14,7 @@ data:
         operator: Exists
       volumeClaimTemplate:
         spec:
-          storageClassName: sc-alertmanager
+          storageClassName: ocs-storagecluster-ceph-rbd
           resources:
             requests:
               storage: 20Gi
@@ -30,8 +30,8 @@ data:
           storageClassName: sc-monitoring
           resources:
             requests:
-              storage: 512Gi
-      retention: 7d
+              storage: 300Gi
+      retention: 14d
     prometheusOperator:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
